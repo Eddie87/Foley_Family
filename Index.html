@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Foley Family Migration Map</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map { height: 100vh; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([51.9, -8.4], 3);  // Center on Ireland
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var data = [
+            {
+                "First Name": "ELLEN",
+                "Surname": "FOLEY",
+                "Born": "17/02/1900",
+                "Origin Location": "GLENAGAUL, RATHCORMAC, CO. CORK",
+                "Origin Coords": { "lat": 52.8474, "lon": -6.4881 },
+                "Destination": "Manhattan, New York, USA",
+                "Destination Coords": { "lat": 40.7831, "lon": -73.9712 },
+                "Emigration Year": "1923"
+            },
+            {
+                "First Name": "THOMAS JOSEPH",
+                "Surname": "FOLEY",
+                "Born": "Unknown",
+                "Origin Location": "GLENAGAUL, RATHCORMAC, CO. CORK",
+                "Origin Coords": { "lat": 52.8474, "lon": -6.4881 },
+                "Destination": "Port Angeles, Washington, USA",
+                "Destination Coords": { "lat": 48.1181, "lon": -123.4307 },
+                "Emigration Year": "1945"
+            },
+            {
+                "First Name": "HANNAH",
+                "Surname": "FOLEY",
+                "Born": "Unknown",
+                "Origin Location": "GLENAGAUL, RATHCORMAC, CO. CORK",
+                "Origin Coords": { "lat": 52.8474, "lon": -6.4881 },
+                "Destination": "Wayne, Detroit, Michigan, USA",
+                "Destination Coords": { "lat": 42.2814, "lon": -83.3863 },
+                "Emigration Year": "Unknown"
+            },
+            {
+                "First Name": "BRIDIE",
+                "Surname": "FOLEY",
+                "Born": "Unknown",
+                "Origin Location": "GLENAGAUL, RATHCORMAC, CO. CORK",
+                "Origin Coords": { "lat": 52.8474, "lon": -6.4881 },
+                "Destination": "New York, USA",
+                "Destination Coords": { "lat": 40.7128, "lon": -74.0060 },
+                "Emigration Year": "Unknown"
+            }
+        ];
+
+        data.forEach(function(person) {
+            if (person["Origin Coords"]) {
+                var origin = person["Origin Coords"];
+                var originMarker = L.marker([origin.lat, origin.lon]).addTo(map);
+                originMarker.bindPopup(
+                    `<strong>${person["First Name"]} ${person["Surname"]}</strong><br>
+                    Born: ${person["Born"]}<br>
+                    Location: ${person["Origin Location"]}`
+                );
+            }
+            if (person["Origin Coords"] && person["Destination Coords"]) {
+                var dest = person["Destination Coords"];
+                var destMarker = L.marker([dest.lat, dest.lon]).addTo(map);
+                destMarker.bindPopup(
+                    `<strong>${person["First Name"]} ${person["Surname"]}</strong><br>
+                    Destination: ${person["Destination"]}<br>
+                    Emigrated: ${person["Emigration Year"]}`
+                );
+
+                // Draw line
+                var path = L.polyline([
+                    [person["Origin Coords"].lat, person["Origin Coords"].lon],
+                    [dest.lat, dest.lon]
+                ], { color: 'blue' }).addTo(map);
+            }
+        });
+    </script>
+</body>
+</html>
